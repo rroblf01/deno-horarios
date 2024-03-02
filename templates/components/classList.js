@@ -215,6 +215,11 @@ border-teal-600 transition">Guardar</button>
     }
     
     createClassElement(body) {
+        if(!body.date || !body.place || !body.duration){
+            alert('Por favor, rellene todos los campos.')
+            return ;
+        }
+
         const token = this.getToken();
         if (!token) {
             alert('Por favor, inicie sesión.')
