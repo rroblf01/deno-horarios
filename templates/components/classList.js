@@ -43,7 +43,7 @@ hover:bg-teal-700 hover:text-teal-100
 bg-teal-100 
 text-teal-700 
 border duration-200 ease-in-out 
-border-teal-600 transition">Submit</button>
+border-teal-600 transition">Guardar</button>
                 </div>
             </div>
         </div>
@@ -217,6 +217,7 @@ border-teal-600 transition">Submit</button>
     createClassElement(body) {
         const token = this.getToken();
         if (!token) {
+            alert('Por favor, inicie sesión.')
             return ;
         }
         const headers = {"content-type": "application/json", "Authorization": `Bearer ${token}`};
