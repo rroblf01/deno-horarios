@@ -79,6 +79,9 @@ border-teal-600 transition">Guardar</button>
                                     Minutos
                                 </th>
                                 <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
+                                    Dinero
+                                </th>
+                                <th scope="col" class="text-sm font-medium text-gray-900 px-6 py-4 text-left">
                                 </th>
                             </tr>
                         </thead>
@@ -169,6 +172,7 @@ border-teal-600 transition">Guardar</button>
             tr.id = `table-element-${index}`;
             const hours = Math.floor(c.duration);
             const minutes = Math.round((c.duration - hours) * 60);
+            const money = c.duration * 10;
             tr.innerHTML = `
                 <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap text-center">
                     ${c.date}
@@ -181,6 +185,9 @@ border-teal-600 transition">Guardar</button>
                 </td>
                 <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
                     ${minutes}
+                </td>
+                <td class="text-sm text-gray-900 font-light px-6 py-4 whitespace-nowrap">
+                    ${money} + 5€
                 </td>
             `;
             const button = document.createElement('button');
