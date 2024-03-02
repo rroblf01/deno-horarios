@@ -155,6 +155,9 @@ border-teal-600 transition">Guardar</button>
 
         const total_hours_el = document.getElementById('total_hours');
         total_hours_el.innerHTML = '';
+
+        const total_money_el = document.getElementById('total_money');
+        total_money_el.innerHTML = '';
     }
 
     createList(classes) {
