@@ -88,6 +88,7 @@ border-teal-600 transition">Guardar</button>
 
                     <div class="flex justify-center items-center mt-2">
                         <h1 id="total_hours" class="text-2xl px-2"></h1>
+                        <h1 id="total_money" class="text-2xl px-2"></h1>
                     </div>
                 </div>
             </div>
@@ -192,6 +193,7 @@ border-teal-600 transition">Guardar</button>
         })
 
         this.getTotalHours();
+        this.getMoney();
     }
 
     cleanList() {
@@ -248,10 +250,7 @@ border-teal-600 transition">Guardar</button>
             return ;
         }
 
-        // Filter all tr elements and remove the one with the id
         const tableClasses = document.getElementById('table_classes');
-        
-        // Create a array with date, place and duration of all elements without the one with the id
         const classes = Array.from(tableClasses.children).filter((el, index) => index !== id).map(el => {
             return {
                 date: el.children[0].innerText,
@@ -305,6 +304,27 @@ border-teal-600 transition">Guardar</button>
         const total_hours_el = document.getElementById('total_hours');
         const text = `${hours}h ${minutes}m`
         total_hours_el.innerHTML = text;
+    }
+
+    getMoney(){
+        const tableClasses = document.getElementById('table_classes');
+
+        let total_hours = 0;
+        let total_minutes = 0;
+        let total_money = 0;
+
+        Array.from(tableClasses.children).forEach(el => {
+            total_hours += parseFloat(el.children[2].innerText);
+            total_minutes += parseFloat(el.children[3].innerText);
+            total_money += 5
+        });
+
+        total_money += (total_hours + total_minutes / 60) * 10;
+
+        const total_money_el = document.getElementById('total_money');
+        const text = `Total: ${total_money}€`
+
+        total_money_el.innerHTML = text;
     }
 }
 
