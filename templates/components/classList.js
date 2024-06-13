@@ -1,4 +1,5 @@
 import { customGet, customPost, customPut } from '../utils/http-fetch.js';
+import { initFetch } from '../utils/init-fetch.js';
 
 class ClassList extends HTMLElement {
     constructor() {
@@ -102,7 +103,8 @@ border-teal-600 transition">Guardar</button>
 </div>`;
     }
 
-    connectedCallback() {
+    async connectedCallback() {
+        await this.initLoadData()
         this.getClasses()
 
         const form = document.getElementById('classForm');
@@ -124,6 +126,17 @@ border-teal-600 transition">Guardar</button>
             this.setMonth(1);
             this.getClasses();
         });
+    }
+
+    async initLoadData() {
+        const token = this.getToken();
+        if (!token) {
+            return [];
+        }
+
+        const headers = { "content-type": "application/json", "Authorization": `Bearer ${token}` };
+        const url = `/api/classes/`;
+        await initFetch(url, headers);
     }
 
     getToken() {

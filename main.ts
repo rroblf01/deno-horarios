@@ -3,6 +3,7 @@ import { bearerAuth } from "@hono/hono/bearer-auth";
 import { serveStatic } from "@hono/hono/deno";
 
 import { createUser, findToken, getClasses, registerClass, putAllClasses } from './db.ts'
+import { getDates } from './utils.ts'
 import { inyectEnv } from './envs.ts'
 
 const app = new Hono()
@@ -31,6 +32,13 @@ app.get('/api/classes/:date', async (c) => {
   const date = c.req.param('date')
   const classes = await getClasses(date)
   return c.json(classes)
+})
+
+app.get('/api/classes/', async (c) => {
+  const dates = getDates()
+  const classes = await Promise.all(dates.map((date) => getClasses(date)))
+  const data = dates.map((date, i) => ({ date, classes: classes[i] }))
+  return c.json(data)
 })
 
 app.post('/api/classes', async (c) => {
