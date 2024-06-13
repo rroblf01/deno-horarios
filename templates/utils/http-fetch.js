@@ -10,7 +10,6 @@ export const customGet = async (url, headers, clearCache = false) => {
         }
     }
 
-    console.log('fetching from server')
     try {
         const response = await fetch(url, { headers });
         const res = await response.json();
