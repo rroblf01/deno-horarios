@@ -1,7 +1,7 @@
 class LoginNav extends HTMLElement {
     constructor() {
         super();
-        this.innerHTML = `
+        this.innerHTML = /*html*/`
 <div class="flex justify-center items-center mt-2">
     <div id="logout_place">
         <button id="logout"
@@ -45,7 +45,7 @@ class LoginNav extends HTMLElement {
 
         const login = document.getElementById('login');
         const logout = document.getElementById('logout');
-        
+
         logout.addEventListener('click', () => {
             this.removeToken();
             this.setVisibility();
@@ -60,18 +60,18 @@ class LoginNav extends HTMLElement {
     }
 
     login(username, password) {
-        const body = JSON.stringify({username, password});
+        const body = JSON.stringify({ username, password });
         fetch('/login', {
             method: 'POST',
-            headers: {"content-type": "application/json"},
+            headers: { "content-type": "application/json" },
             body
         }).then(response => {
             return response.json()
         }).then(res => {
-            if(res.errors){
+            if (res.errors) {
                 alert(res.errors)
                 return;
-            }else{
+            } else {
                 this.setToken(res.token);
                 this.setVisibility();
                 window.location.reload();
@@ -101,7 +101,7 @@ class LoginNav extends HTMLElement {
             login_place.style.display = 'none';
             logout_place.style.display = 'block';
 
-        }else{
+        } else {
             login_place.style.display = 'block';
             logout_place.style.display = 'none';
         }
@@ -109,5 +109,5 @@ class LoginNav extends HTMLElement {
 }
 
 if ('customElements' in window) {
-	customElements.define('login-nav', LoginNav);
+    customElements.define('login-nav', LoginNav);
 }

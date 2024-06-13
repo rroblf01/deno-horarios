@@ -1,8 +1,10 @@
+import { customGet, customPost, customPut } from '../utils/http-fetch.js';
+
 class ClassList extends HTMLElement {
     constructor() {
         super();
         this.month = this.getMonth();
-        this.innerHTML = `
+        this.innerHTML = /*html*/`
 <form id="classForm">
     <div class="p-5">
         <div class="mt-2">
@@ -128,28 +130,24 @@ border-teal-600 transition">Guardar</button>
         return localStorage.getItem('token');
     }
 
-    getClasses() {
+    getClasses(clearCache = false) {
         this.clearTable()
         const token = this.getToken();
         if (!token) {
             return [];
         }
 
-        const headers = {"content-type": "application/json", "Authorization": `Bearer ${token}`};
-        fetch(`/api/classes/${this.month}`, {headers}
-        ).then(response => {
-            return response.json()
-        }).then(res => {
-            if(res){
-                this.createList(res);
-            }
-        })
+        const headers = { "content-type": "application/json", "Authorization": `Bearer ${token}` };
+        const url = `/api/classes/${this.month}`;
+        customGet(url, headers, clearCache).then(response => {
+            this.createList(response);
+        });
     }
 
     getMonth() {
         const date = new Date();
 
-        return `${date.getFullYear()}-${date.getMonth()+1}`;
+        return `${date.getFullYear()}-${date.getMonth() + 1}`;
     }
 
     clearTable() {
@@ -222,34 +220,29 @@ border-teal-600 transition">Guardar</button>
         body.duration = parseFloat(body.hours) + parseFloat(body.minuts) / 60;
         delete body.hours;
         delete body.minuts;
-        
+
         return body;
     }
-    
+
     createClassElement(body) {
-        if(!body.date || !body.place || !body.duration){
+        if (!body.date || !body.place || !body.duration) {
             alert('Por favor, rellene todos los campos.')
-            return ;
+            return;
         }
 
         const token = this.getToken();
         if (!token) {
             alert('Por favor, inicie sesión.')
-            return ;
+            return;
         }
-        const headers = {"content-type": "application/json", "Authorization": `Bearer ${token}`};
-        
-        fetch('/api/classes', {
-            method: 'POST',
-            headers,
-            body: JSON.stringify(body)
-        }).then(response => {
-            return response.json()
-        }).then(res => {
-            if(res.errors){
+
+        const headers = { "content-type": "application/json", "Authorization": `Bearer ${token}` };
+        const url = '/api/classes';
+        customPost(url, headers, JSON.stringify(body)).then(res => {
+            if (res.errors) {
                 alert(res.errors)
-            }else{
-                this.getClasses();
+            } else {
+                this.getClasses(true);
             }
         })
     }
@@ -257,7 +250,7 @@ border-teal-600 transition">Guardar</button>
     deleteClassElement(id) {
         const token = this.getToken();
         if (!token) {
-            return ;
+            return;
         }
 
         const tableClasses = document.getElementById('table_classes');
@@ -269,19 +262,13 @@ border-teal-600 transition">Guardar</button>
             }
         });
 
-        const headers = {"content-type": "application/json", "Authorization": `Bearer ${token}`};
-        
-        fetch(`/api/classes/${this.month}`, {
-            method: 'PUT',
-            headers,
-            body: JSON.stringify({classes})
-        }).then(response => {
-            return response.json()
-        }).then(res => {
-            if(res.errors){
+        const headers = { "content-type": "application/json", "Authorization": `Bearer ${token}` };
+        const url = `/api/classes/${this.month}`;
+        customPut(url, headers, JSON.stringify({ classes })).then(res => {
+            if (res.errors) {
                 alert(res.errors)
-            }else{
-                this.getClasses();
+            } else {
+                this.getClasses(true);
             }
         })
     }
@@ -289,7 +276,7 @@ border-teal-600 transition">Guardar</button>
     setMonth(n) {
         const date = new Date(`${this.month}-01`);
         date.setMonth(date.getMonth() + n);
-        this.month = `${date.getFullYear()}-${date.getMonth()+1}`;
+        this.month = `${date.getFullYear()}-${date.getMonth() + 1}`;
         const current_month = document.getElementById('current_month');
         current_month.innerHTML = this.month;
     }
@@ -316,7 +303,7 @@ border-teal-600 transition">Guardar</button>
         total_hours_el.innerHTML = text;
     }
 
-    getMoney(){
+    getMoney() {
         const tableClasses = document.getElementById('table_classes');
 
         let total_hours = 0;
@@ -339,5 +326,5 @@ border-teal-600 transition">Guardar</button>
 }
 
 if ('customElements' in window) {
-	customElements.define('class-list', ClassList);
+    customElements.define('class-list', ClassList);
 }

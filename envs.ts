@@ -1,4 +1,4 @@
-import { load } from "./deps.ts";
+import { load } from "@std/dotenv";
 
 export const inyectEnv = async () => {
     if (!Deno.env.get('USERNAME') || !Deno.env.get('PASSWORD') || !Deno.env.get('TOKEN')) {

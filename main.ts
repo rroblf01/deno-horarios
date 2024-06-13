@@ -1,12 +1,15 @@
-import { Hono, bearerAuth, serveStatic, cors } from './deps.ts'
-import {createUser, findToken, getClasses, registerClass, putAllClasses} from './db.ts'
-import {inyectEnv} from './envs.ts'
+import { Hono } from '@hono/hono'
+import { bearerAuth } from "@hono/hono/bearer-auth";
+import { serveStatic } from "@hono/hono/deno";
+
+import { createUser, findToken, getClasses, registerClass, putAllClasses } from './db.ts'
+import { inyectEnv } from './envs.ts'
 
 const app = new Hono()
+
 await inyectEnv()
 await createUser()
 
-app.use('/login', cors())
 app.post('/login', async (c) => {
   const body = await c.req.json()
   if (!body['username'] || !body['password']) {
@@ -22,7 +25,7 @@ app.post('/login', async (c) => {
   }
 })
 
-app.use('/api/*', bearerAuth({ token: Deno.env.get('TOKEN') }))
+app.use('/api/*', bearerAuth({ token: Deno.env.get('TOKEN') || '' }))
 
 app.get('/api/classes/:date', async (c) => {
   const date = c.req.param('date')

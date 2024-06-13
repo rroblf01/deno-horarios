@@ -1,22 +1,23 @@
 import {getHash} from './utils.ts'
+import {SchoolClass} from './interfaces.d.ts'
 
 const kv = await Deno.openKv();
 
 export const findToken = async (username: string, password: string) => {
     const hash = await getHash(username, password);
-    const result = await kv.get([hash]);
-
+    const result = await kv.get<{ token?: string }>([hash]);
+    
     if (!result.value) {
         return null;
     }
-
+    
     return result.value.token;
 }
 
 export const createUser = async () => {
-    const username = Deno.env.get('USERNAME')
-    const password = Deno.env.get('PASSWORD')
-    const token = Deno.env.get('TOKEN')
+    const username = Deno.env.get('USERNAME') || ''
+    const password = Deno.env.get('PASSWORD') || ''
+    const token = Deno.env.get('TOKEN') || ''
 
     const hash = await getHash(username, password);
 
@@ -26,7 +27,7 @@ export const createUser = async () => {
 export const registerClass = async (dateString: string, place: string, duration: string) => {
     const date = new Date(dateString)
     const key = [`${date.getFullYear()}-${date.getMonth()}`];
-    const result = await kv.get(key);
+    const result = await kv.get<Array<SchoolClass>>(key);
 
     if (!result.value) {
         await kv.set(key, [{place, duration, date: dateString}]);
@@ -41,15 +42,15 @@ export const getClasses = async (dateString: string) => {
     const key = [`${date.getFullYear()}-${date.getMonth()}`];
 
     const result = await kv.get(key);
-
-    if (!result) {
+    
+    if (!result.value) {
         return [];
     }
-
+    
     return result.value;
 }
 
-export const putAllClasses = async (dateString: string, allClasses: Array) => {
+export const putAllClasses = async (dateString: string, allClasses: Array<SchoolClass>) => {
     const date = new Date(dateString)
     const key = [`${date.getFullYear()}-${date.getMonth()}`];
     const result = await kv.get(key);

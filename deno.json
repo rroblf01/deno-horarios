@@ -3,5 +3,9 @@
     "dev:tailwind": "deno run -A npm:tailwindcss -i ./templates/input.css -o ./templates/output.css --watch --minify",
     "dev:server": "deno run -A --unstable --watch main.ts",
     "dev": "deno task dev:server & deno task dev:tailwind"
+  },
+  "imports": {
+    "@hono/hono": "jsr:@hono/hono@^4.4.5",
+    "@std/dotenv": "jsr:@std/dotenv@^0.224.0"
   }
 }
